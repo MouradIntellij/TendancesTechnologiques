@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechTrends — Portail Aide-Mémoires 420-TT4</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #312e81 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 20px; }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 50px 20px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        header p { font-size: 1.2em; opacity: 0.95; }
+        header .sub { font-size: 1em; opacity: 0.8; margin-top: 8px; }
+        header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 14px;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border-top: 6px solid var(--accent);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 35px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            color: var(--accent);
+            font-size: 1.4em;
+            margin-bottom: 8px;
+        }
+
+        .card .emoji { font-size: 1.8em; display: block; margin-bottom: 6px; }
+
+        .card p { font-size: 0.98em; color: #475569; margin-bottom: 12px; flex-grow: 1; }
+
+        .card .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+
+        .tag {
+            background: #eef2ff;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.78em;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.85; }
+
+        .js       { --accent: #667eea; }
+        .ts       { --accent: #3178c6; }
+        .docker   { --accent: #0e7490; }
+        .postgres { --accent: #1e40af; }
+        .redis    { --accent: #dc2626; }
+        .ia       { --accent: #7c3aed; }
+
+        .section-title {
+            color: white;
+            font-size: 1.6em;
+            text-align: center;
+            margin: 30px 0 5px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .section-sub {
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .repo {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            margin: 25px 0;
+        }
+
+        .repo h3 { color: #1e3a8a; margin-bottom: 8px; }
+        .repo code { background: #eef2ff; padding: 2px 8px; border-radius: 5px; color: #1e40af; font-size: 0.95em; }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            padding: 25px;
+            margin-top: 30px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 15px;
+        }
+        footer a { color: #93c5fd; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🚀 TechTrends</h1>
+        <p>Portail d'auto-formation — Aide-mémoires interactifs</p>
+        <p class="sub">Cours 420-TT4-AS — Les Tendances Technologiques · Collège LaSalle</p>
+        <span class="badge">Cliquez sur une technologie pour y entrer :</span>
+    </header>
+
+    <h2 class="section-title">📚 Bibliothèque des technologies</h2>
+    <p class="section-sub">JavaScript → TypeScript → Docker → PostgreSQL → Redis → Agents IA</p>
+
+    <div class="grid">
+        <div class="card js">
+            <span class="emoji">📗</span>
+            <h3>JavaScript ES6+</h3>
+            <p>Les bases du langage : variables, fonctions, tableaux, asynchrone, DOM, modules et toutes les fonctionnalités modernes d'ES6+.</p>
+            <div class="tags">
+                <span class="tag">ES6+</span><span class="tag">DOM</span><span class="tag">Async</span><span class="tag">Modules</span>
+            </div>
+            <a class="btn" href="JS/index.html">Explorer JavaScript →</a>
+        </div>
+
+        <div class="card ts">
+            <span class="emoji">📘</span>
+            <h3>TypeScript</h3>
+            <p>Le superset typé de JavaScript : types, interfaces, classes, génériques, utilitaires et son écosystème moderne (5.9+ / 6 / 7).</p>
+            <div class="tags">
+                <span class="tag">Types</span><span class="tag">Génériques</span><span class="tag">TSX</span><span class="tag">tsconfig</span>
+            </div>
+            <a class="btn" href="TS/index.html">Explorer TypeScript →</a>
+        </div>
+
+        <div class="card docker">
+            <span class="emoji">🐳</span>
+            <h3>Docker</h3>
+            <p>Conteneurisation : images, conteneurs, Dockerfile, volumes, réseaux, Docker Compose et les bonnes pratiques.</p>
+            <div class="tags">
+                <span class="tag">Images</span><span class="tag">Compose</span><span class="tag">Volumes</span><span class="tag">Réseaux</span>
+            </div>
+            <a class="btn" href="Docker/index.html">Explorer Docker →</a>
+        </div>
+
+        <div class="card postgres">
+            <span class="emoji">🐘</span>
+            <h3>PostgreSQL</h3>
+            <p>Le SGBD relationnel open source : SQL, modélisation, jointures, index, transactions et intégration Node.js.</p>
+            <div class="tags">
+                <span class="tag">SQL</span><span class="tag">JOIN</span><span class="tag">Index</span><span class="tag">Adminer</span>
+            </div>
+            <a class="btn" href="PostgreSQL/index.html">Explorer PostgreSQL →</a>
+        </div>
+
+        <div class="card redis">
+            <span class="emoji">🧡</span>
+            <h3>Redis</h3>
+            <p>Le store clé-valeur en mémoire : types de données, commandes, cache-first, TTL, sessions et client Node.js.</p>
+            <div class="tags">
+                <span class="tag">Cache</span><span class="tag">TTL</span><span class="tag">Key-Value</span><span class="tag">redis-cli</span>
+            </div>
+            <a class="btn" href="Redis/index.html">Explorer Redis →</a>
+        </div>
+
+        <div class="card ia">
+            <span class="emoji">🤖</span>
+            <h3>Agents IA</h3>
+            <p>Intelligence artificielle appliquée : LLM, prompts, agents, RAG, Ollama local, APIs et intégration dans du code.</p>
+            <div class="tags">
+                <span class="tag">LLM</span><span class="tag">RAG</span><span class="tag">Prompt</span><span class="tag">Ollama</span>
+            </div>
+            <a class="btn" href="AgentIA/index.html">Explorer Agents IA →</a>
+        </div>
+    </div>
+
+    <div class="repo">
+        <h3>🌍 Le projet TechTrends sur GitHub</h3>
+        <p>
+            <strong>TechTrends</strong> est une plateforme web moderne qui permet aux utilisateurs de découvrir,
+            rechercher et suivre les dernières tendances dans le domaine de la technologie : Intelligence artificielle,
+            développement web, cloud et plus encore. Cette bibliothèque d'aide-mémoires en est le support de formation.
+        </p>
+        <p style="margin-top:8px;">
+            💻 Repository : <a href="https://github.com/MouradIntellij/TendancesTechnologiques"
+            style="color:#1e3a8a; font-weight:600;">github.com/MouradIntellij/TendancesTechnologiques</a>
+        </p>
+    </div>
+
+    <footer>
+        <p>🚀 TechTrends — Plateforme d'aide-mémoires interactifs · Cours 420-TT4-AS · Collège LaSalle</p>
+        <p style="margin-top:6px; font-size:0.9em;">JavaScript · TypeScript · Docker · PostgreSQL · Redis · Agents IA</p>
+    </footer>
+</div>
+</body>
+</html>

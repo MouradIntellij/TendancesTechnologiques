@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aide-Mémoire TypeScript Interactif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #0f172a 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        header .badge {
+            display: inline-block;
+            background: #3178c6;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #3178c6;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            color: #2563eb;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: #3178c6;
+            color: white;
+        }
+
+        .category-btn.active {
+            background: #3178c6;
+            color: white;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section h2 {
+            color: #2563eb;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2563eb;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #1e40af;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .code-block {
+            background: #0d1117;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .code-block code {
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #3178c6;
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+        }
+
+        .example {
+            background: #f0f7ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .example strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .note {
+            background: #e0f2fe;
+            border-left: 4px solid #0ea5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table th {
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f0f7ff;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .card h4 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 50px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 15px;
+        }
+
+        .keyword { color: #ff79c6; font-weight: bold; }
+        .type { color: #4fc3f7; }
+        .string { color: #a5d6ff; }
+        .number { color: #bd93f9; }
+        .comment { color: #7d8590; font-style: italic; }
+        .function { color: #8be9fd; }
+        .template { color: #ffb86c; }
+        .error { color: #ff5c5c; font-weight: bold; }
+        .ok { color: #50fa7b; font-weight: bold; }
+
+        .tech-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            padding: 10px 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        }
+
+        .tech-nav .nav-logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.05em;
+            text-decoration: none;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .tech-nav .nav-links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .tech-nav .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 5px 13px;
+            border-radius: 8px;
+            font-size: 0.93em;
+            font-weight: 600;
+            transition: all 0.25s;
+            border: 1px solid transparent;
+        }
+
+        .tech-nav .nav-links a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .tech-nav .nav-links a.active {
+            background: white;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="tech-nav">
+        <a href="../index.html" class="nav-logo">🚀 TechTrends</a>
+        <div class="nav-links">
+            <a href="../JS/index.html">JavaScript</a>
+            <a href="../TS/index.html" class="active">TypeScript</a>
+            <a href="../Docker/index.html">Docker</a>
+            <a href="../PostgreSQL/index.html">PostgreSQL</a>
+            <a href="../Redis/index.html">Redis</a>
+            <a href="../AgentIA/index.html">Agents IA</a>
+        </div>
+    </nav>
+    <header>
+        <h1>📘 Aide-Mémoire TypeScript — Collège LaSalle</h1>
+        <p>Guide complet et interactif pour mon groupe 420-TT4-AS</p>
+        <span class="badge">⚡ Basé sur TypeScript 5.9+ / 6.0 / 7.0 (compilateur natif Go)</span>
+    </header>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher une fonctionnalité TypeScript...">
+    </div>
+
+    <div class="nav-categories">
+        <button class="category-btn active" data-category="setup">Démarrage & Config</button>
+        <button class="category-btn" data-category="types-base">Types de Base</button>
+        <button class="category-btn" data-category="types-avances">Types Avancés</button>
+        <button class="category-btn" data-category="interfaces">Interfaces & Types</button>
+        <button class="category-btn" data-category="classes">Classes & POO</button>
+        <button class="category-btn" data-category="fonctions">Fonctions Typées</button>
+        <button class="category-btn" data-category="generics">Génériques</button>
+        <button class="category-btn" data-category="utilitaires">Utilitaires</button>
+        <button class="category-btn" data-category="modules">Modules</button>
+        <button class="category-btn" data-category="async">Asynchrone</button>
+        <button class="category-btn" data-category="dom-react">DOM & React</button>
+        <button class="category-btn" data-category="ecosysteme">Écosystème Node/DB</button>
+    </div>
+
+    <!-- SECTION DÉMARRAGE & CONFIGURATION -->
+    <section class="section active" data-section="setup">
+        <h2>⚙️ Démarrage & Configuration</h2>
+
+        <h3>TypeScript : c'est quoi ?</h3>
+        <p>
+            TypeScript = JavaScript + une couche de types (types statiques). Le compilateur <code>tsc</code>
+            transforme le <code>.ts</code> en JavaScript pur, mais surtout il détecte les erreurs de type
+            <strong>avant</strong> l'exécution. C'est du « JavaScript typé pour mieux coder ».
+        </p>
+        <div class="example">
+            <strong>👉 Pourquoi utiliser TypeScript ?</strong>
+            <ul>
+                <li>Autocomplétion intelligente dans WebStorm / VS Code</li>
+                <li>Erreurs détectées à la compilation, pas en production</li>
+                <li>Refactoring sans crainte (le compilateur guide)</li>
+                <li>Documentation vivante grâce aux types</li>
+            </ul>
+        </div>
+
+        <h3>Installation (npm)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Installation locale (recommandé dans un projet)</span>
+npm install -<span class="template">D</span> <span class="type">typescript</span>          <span class="comment"># TypeScript 7.x (compilateur natif Go)</span>
+
+<span class="comment">// Installation globale</span>
+npm install -g <span class="type">typescript</span>
+
+<span class="comment">// Vérifier la version</span>
+tsc --version      <span class="comment">// 7.0.x — environ 10× plus rapide que 5.x</span>
+npx tsc --version  <span class="comment">// version locale du projet</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Depuis TS 6.0 :</strong> le mode <code>strict</code> est activé <strong>par défaut</strong>
+            (avant il fallait l'activer). Depuis TS 7.0, le compilateur est écrit en Go : builds beaucoup plus rapides.
+        </div>
+
+        <h3>tsconfig.json — la configuration (WebStorm génère ce fichier)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code>{
+  <span class="string">"compilerOptions"</span>: {
+    <span class="string">"target"</span>: <span class="string">"ES2024"</span>,                <span class="comment">// Version JS générée</span>
+    <span class="string">"module"</span>: <span class="string">"NodeNext"</span>, <span class="comment">// Système de modules (ESM moderne)</span>
+    <span class="string">"moduleResolution"</span>: <span class="string">"NodeNext"</span>,
+    <span class="string">"rootDir"</span>: <span class="string">"./src"</span>,                 <span class="comment">// Dossier source</span>
+    <span class="string">"outDir"</span>: <span class="string">"./dist"</span>,                 <span class="comment">// Dossier généré</span>
+    <span class="string">"strict"</span>: <span class="keyword">true</span>,                  <span class="comment">// ✅ Activé par défaut en TS 6+</span>
+    <span class="string">"noEmitOnError"</span>: <span class="keyword">true</span>,
+    <span class="string">"skipLibCheck"</span>: <span class="keyword">true</span>,
+    <span class="string">"verbatimModuleSyntax"</span>: <span class="keyword">true</span>, <span class="comment">// Import de types explicites</span>
+    <span class="string">"erasableSyntaxOnly"</span>: <span class="keyword">true</span>   <span class="comment">// TS 5.8+ : syntaxe compatible Node</span>
+  },
+  <span class="string">"include"</span>: [<span class="string">"src"</span>]
+}</code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Strict mode :</strong> <code>strict: true</code> active : <code>noImplicitAny</code>
+            (interdit les types implicites <code>any</code>), <code>strictNullChecks</code> (force la gestion de
+            <code>null</code>/<code>undefined</code>), <code>noUnusedLocals</code>, etc. C'est LA bonne pratique
+            enseignée aujourd'hui.
+        </div>
+
+        <h3>Compilation</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code>npx tsc                  <span class="comment">// Compile selon tsconfig.json</span>
+npx tsc --watch          <span class="comment">// Recompile à chaque sauvegarde</span>
+npx tsc --noEmit         <span class="comment">// Vérifie les types SANS générer de JS</span>
+npx tsc src/app.ts       <span class="comment">// Compile un fichier précis</span>
+
+<span class="comment">// Avec Node.js 24+ : exécution directe de .ts natif (type stripping)</span>
+node src/app.ts          <span class="comment">// ✅ Node exécute du TypeScript directement</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 WebStorm :</strong> WebStorm utilise le language server de TypeScript. Créez un projet vide,
+            activez « Built-in TypeScript » (Settings → Languages & Frameworks → TypeScript) et sélectionnez la
+            version du projet (<code>node_modules/typescript</code>). Ajoutez un <code>Run Configuration</code>
+            pour exécuter <code>node --watch</code> ou un script npm.
+        </div>
+    </section>
+
+    <!-- SECTION TYPES DE BASE -->
+    <section class="section" data-section="types-base">
+        <h2>🔤 Types de Base</h2>
+
+        <h3>Annotations de types</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">let</span> montant: <span class="type">number</span> = <span class="number">42</span>;
+<span class="keyword">let</span> nom: <span class="type">string</span> = <span class="string">'Alice'</span>;
+<span class="keyword">let</span> actif: <span class="type">boolean</span> = <span class="keyword">true</span>;
+
+<span class="comment">// L'inférence : TS devine le type automatiquement</span>
+<span class="keyword">const</span> prix = <span class="number">99.99</span>;      <span class="comment">// type inféré : number</span>
+<span class="keyword">const</span> titre = <span class="string">'React'</span>;  <span class="comment">// type inféré : string</span>
+
+<span class="comment">// ✅ Prioriser l'inférence sauf pour les fonctions/API</span></code>
+        </div>
+
+        <h3>Tableau des types primitifs</h3>
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Exemple</th>
+            </tr>
+            <tr>
+                <td><code>string</code></td>
+                <td>Chaîne de caractères</td>
+                <td><code>'Bonjour', "Hello", `Template`</code></td>
+            </tr>
+            <tr>
+                <td><code>number</code></td>
+                <td>Nombre (entier ou décimal)</td>
+                <td><code>42, 3.14, -10, 1e6</code></td>
+            </tr>
+            <tr>
+                <td><code>boolean</code></td>
+                <td>Vrai / faux</td>
+                <td><code>true, false</code></td>
+            </tr>
+            <tr>
+                <td><code>bigint</code></td>
+                <td>Grands entiers (&gt; 2^53)</td>
+                <td><code>12345678901234567890n</code></td>
+            </tr>
+            <tr>
+                <td><code>symbol</code></td>
+                <td>Identifiant unique</td>
+                <td><code>Symbol('id')</code></td>
+            </tr>
+            <tr>
+                <td><code>null</code></td>
+                <td>Absence volontaire de valeur</td>
+                <td><code>null</code></td>
+            </tr>
+            <tr>
+                <td><code>undefined</code></td>
+                <td>Variable jamais initialisée</td>
+                <td><code>undefined</code></td>
+            </tr>
+            <tr>
+                <td><code>any</code></td>
+                <td>Éteint le typage (⚠️ à éviter)</td>
+                <td><code>let x: any = 42;</code></td>
+            </tr>
+            <tr>
+                <td><code>unknown</code></td>
+                <td>Type inconnu — à vérifier avant usage</td>
+                <td><code>let x: unknown = data;</code></td>
+            </tr>
+            <tr>
+                <td><code>never</code></td>
+                <td>Ne retourne jamais (erreur/exception)</td>
+                <td><code>function err(): never { throw ... }</code></td>
+            </tr>
+            <tr>
+                <td><code>void</code></td>
+                <td>Ne retourne rien</td>
+                <td><code>function log(): void {}</code></td>
+            </tr>
+        </table>
+
+        <h3>Tableaux</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Deux syntaxes équivalentes</span>
+<span class="keyword">const</span> nombres: <span class="type">number</span>[] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+<span class="keyword">const</span> fruits: <span class="type">Array</span>&lt;<span class="type">string</span>&gt; = [<span class="string">'pomme'</span>, <span class="string">'banane'</span>];
+
+<span class="comment">// Tableau à plusieurs dimensions</span>
+<span class="keyword">const</span> grille: <span class="type">number</span>[][] = [[<span class="number">1</span>, <span class="number">2</span>], [<span class="number">3</span>, <span class="number">4</span>]];
+
+<span class="comment">// Tuples : tableau à taille/positions fixes</span>
+<span class="keyword">const</span> coordonnees: [<span class="type">number</span>, <span class="type">number</span>] = [<span class="number">10</span>, <span class="number">20</span>]; <span class="comment">// [x, y]</span>
+coordonnees[<span class="number">0</span>] = <span class="number">12</span>;  <span class="ok">// ✅ OK</span>
+<span class="comment">// coordonnees[2] = 30;  // ❌ Erreur : le tuple a 2 éléments</span></code>
+        </div>
+
+        <h3>null, undefined et Optional Chaining</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// strictNullChecks activé → TS exige la gestion de null</span>
+<span class="keyword">const</span> ville: <span class="type">string</span> | <span class="type">null</span> = <span class="keyword">null</span>;
+
+<span class="comment">// Optional Chaining (?.): accès sécurisé</span>
+<span class="keyword">const</span> rue = utilisateur?.adresse?.rue;  <span class="comment">// undefined si absence</span>
+
+<span class="comment">// Nullish Coalescing (??) : valeur par défaut si null/undefined</span>
+<span class="keyword">const</span> nom = utilisateur?.nom ?? <span class="string">'Anonyme'</span>;
+
+<span class="comment">// Assertion non-nulle (!) : « je sais qu'elle existe »</span>
+<span class="keyword">const</span> element = document.getElementById(<span class="string">'app'</span>)!;</code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ any vs unknown :</strong>
+            <ul>
+                <li><code>any</code> désactive TOUTE vérification — équivalent JavaScript pur.</li>
+                <li><code>unknown</code> force une vérification avant utilisation — plus sûr.</li>
+            </ul>
+            <code>unknown</code> est la bonne réponse aux données externes (API, JSON parses).
+        </div>
+
+        <h3>Conversion de types (assertions)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Assertion de type (cast)</span>
+<span class="keyword">const</span> valeur: <span class="type">unknown</span> = <span class="string">'123'</span>;
+<span class="keyword">const</span> nombre = valeur <span class="keyword">as</span> <span class="type">string</span>;
+
+<span class="comment">// Syntaxe angle (interdite en JSX/TSX)</span>
+<span class="keyword">const</span> autre = &lt;<span class="type">string</span>&gt;valeur;
+
+<span class="comment">// Conversions réelles lors de l'exécution</span>
+Number(<span class="string">'123'</span>);           <span class="comment">// 123</span>
+parseInt(<span class="string">'123px'</span>);        <span class="comment">// 123</span>
+String(<span class="number">123</span>);               <span class="comment">// '123'</span>
+JSON.parse(&lt;<span class="type">string</span>&gt;data) <span class="keyword">as</span> <span class="type">Utilisateur</span>;</code>
+        </div>
+    </section>
+
+    <!-- SECTION TYPES AVANCÉS -->
+    <section class="section" data-section="types-avances">
+        <h2>🧩 Types Avancés</h2>
+
+        <h3>Union types (|)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Une valeur qui peut être de plusieurs types</span>
+<span class="keyword">let</span> id: <span class="type">string</span> | <span class="type">number</span> = <span class="string">'abc123'</span>;
+id = <span class="number">456</span>;  <span class="ok">// ✅ OK, number est dans l'union</span>
+
+<span class="keyword">type</span> <span class="type">Statut</span> = <span class="string">'actif'</span> | <span class="string">'inactif'</span> | <span class="string">'suspendu'</span>;
+<span class="keyword">const</span> etat: <span class="type">Statut</span> = <span class="string">'actif'</span>;
+
+<span class="comment">// Narrowing : TS réduit le type automatiquement dans un if</span>
+<span class="keyword">function</span> <span class="function">doubler</span>(valeur: <span class="type">string</span> | <span class="type">number</span>): <span class="type">number</span> {
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> valeur === <span class="string">'string'</span>) {
+    <span class="keyword">return</span> valeur.length * <span class="number">2</span>;   <span class="comment">// TS sait que 'valeur' est string ici</span>
+  }
+  <span class="keyword">return</span> valeur * <span class="number">2</span>;            <span class="comment">// et number ici</span>
+}</code>
+        </div>
+
+        <h3>Literal types</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Type littéral : une valeur exacte</span>
+<span class="keyword">let</span> direction: <span class="string">'gauche'</span> | <span class="string">'droite'</span> = <span class="string">'gauche'</span>;
+<span class="comment">// direction = 'haut';  // ❌ Erreur : 'haut' n'est pas autorisé</span>
+
+<span class="keyword">const</span> PI = <span class="number">3.14</span>;  <span class="comment">// type : 3.14 (literal)</span>
+
+<span class="keyword">type</span> <span class="type">Direction</span> = <span class="string">'haut'</span> | <span class="string">'bas'</span> | <span class="string">'gauche'</span> | <span class="string">'droite'</span>;
+<span class="keyword">type</span> <span class="type">CodeHttp</span> = <span class="number">200</span> | <span class="number">400</span> | <span class="number">404</span> | <span class="number">500</span>;</code>
+        </div>
+
+        <h3>Intersection types (&)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">type</span> <span class="type">DateDisponible</span> = { debut: <span class="type">string</span> };
+<span class="keyword">type</span> <span class="type">Lieu</span> = { salle: <span class="type">string</span>, batiment: <span class="type">string</span> };
+
+<span class="comment">// Intersection : combine les deux structures</span>
+<span class="keyword">type</span> <span class="type">Cours</span> = <span class="type">DateDisponible</span> &amp; <span class="type">Lieu</span>;
+<span class="comment">// Cours = { debut: string, salle: string, batiment: string }</span>
+
+<span class="keyword">const</span> cours: <span class="type">Cours</span> = {
+  debut: <span class="string">'2026-01-12'</span>,
+  salle: <span class="string">'A-200'</span>,
+  batiment: <span class="string">'S4'</span>
+};</code>
+        </div>
+
+        <h3>Enums — ⚠️ usage recommandé</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// ❌ enum classique : code généré, incompatible erasableSyntaxOnly</span>
+enum Couleur { Rouge = <span class="string">'rouge'</span>, Vert = <span class="string">'vert'</span> }
+
+<span class="comment">// ✅ Recommandé moderne : union de literals (erasable, TS 5.8+/node)</span>
+<span class="keyword">type</span> <span class="type">Couleur</span> = <span class="string">'rouge'</span> | <span class="string">'vert'</span> | <span class="string">'bleu'</span>;
+
+<span class="keyword">const</span> couleurs = {
+  Rouge: <span class="string">'rouge'</span>,
+  Vert: <span class="string">'vert'</span>,
+  Bleu: <span class="string">'bleu'</span>,
+} <span class="keyword">as const</span>;  <span class="comment">// objet readonly type-safe</span>
+
+<span class="comment">// const enum : compilé à la volée mais interdit sous eraSyntaxOnly</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Pourquoi éviter <code>enum</code> ?</strong> Depuis TS 5.8, le mode
+            <code>erasableSyntaxOnly</code> (recommandé pour Node.js 24+ qui exécute nativement le TypeScript)
+            interdit les enums, namespaces et paramètres de constructeurs dits « non-erasables » : le code doit
+            pouvoir être effacé de ses types sans transformation. Préférez <code>union types</code> + objets
+            <code>as const</code>.
+        </div>
+
+        <h3>sinon : Record, Index Signature et Tableaux tuples lus</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Index signature : objet à clés dynamiques</span>
+<span class="keyword">interface</span> <span class="type">Traductions</span> {
+  [langue: <span class="type">string</span>]: <span class="type">string</span>;
+}
+<span class="keyword">const</span> t: <span class="type">Traductions</span> = { fr: <span class="string">'Bonjour'</span>, en: <span class="string">'Hello'</span> };
+
+<span class="comment">// Tuple readonly (immutable)</span>
+<span class="keyword">const</span> point: <span class="keyword">readonly</span> [<span class="type">number</span>, <span class="type">number</span>] = [<span class="number">3</span>, <span class="number">5</span>];
+<span class="comment">// point[0] = 9;  // ❌ readonly</span>
+
+<span class="comment">// Optional property (?)</span>
+<span class="keyword">interface</span> <span class="type">Config</span> {
+  url: <span class="type">string</span>;
+  porto?: <span class="type">number</span>;  <span class="comment">// optionnel : number | undefined</span>
+}</code>
+        </div>
+
+        <h3>satisfies — vérifie le type sans perdre la précision</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">type</span> <span class="type">Routes</span> = Record&lt;<span class="type">string</span>, <span class="type">string</span>[]&gt;;
+
+<span class="comment">// satisfies : TS vérifie que l'objet respecte Routes…</span>
+<span class="keyword">const</span> routes = {
+  <span class="string">'/'</span>: [<span class="string">'home'</span>],
+  <span class="string">'/api'</span>: [<span class="string">'GET'</span>, <span class="string">'POST'</span>],
+} <span class="keyword">satisfies</span> <span class="type">Routes</span>;
+
+routes[<span class="string">'/'</span>].push(<span class="string">'about'</span>);  <span class="ok">// ✅ OK, TS garde le type précis</ok></code>
+        </div>
+    </section>
+
+    <!-- SECTION INTERFACES & TYPES -->
+    <section class="section" data-section="interfaces">
+        <h2>📐 Interfaces & Type Aliases</h2>
+
+        <h3>Interface vs Type</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Interface : décrit la STRUCTURE d'un objet</span>
+<span class="keyword">interface</span> <span class="type">Utilisateur</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age?: <span class="type">number</span>;     <span class="comment">// optionnel</span>
+}
+
+<span class="comment">// Type alias : idem, mais plus flexible</span>
+<span class="keyword">type</span> <span class="type">Utilisateur2</span> = {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+};
+
+<span class="comment">// ⚡ Même démarche moderne : prefer interface pour objets, type pour le reste</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Règle générale :</strong> une <code>interface</code> peut être étendue (declaration merging)
+            et <code>extends</code> ; un <code>type</code> peut faire des unions/intersections/mapped types.
+            Pour un objet simple, les deux conviennent — la communauté moderne utilise surtout
+            <code>type</code> et <code>interface</code> selon le style du projet.
+        </div>
+
+        <h3>Extends (héritage d'interfaces)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">interface</span> <span class="type">Animal</span> {
+  nom: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+}
+
+<span class="keyword">interface</span> <span class="type">Chien</span> <span class="keyword">extends</span> <span class="type">Animal</span> {
+  race: <span class="type">string</span>;
+  aboyer(): <span class="type">string</span>;
+}
+
+<span class="keyword">const</span> rex: <span class="type">Chien</span> = {
+  nom: <span class="string">'Rex'</span>,
+  age: <span class="number">3</span>,
+  race: <span class="string">'Labrador'</span>,
+  aboyer: () =&gt; <span class="string">'Wouf!'</span>
+};
+
+<span class="comment">// Interface avec méthodes (callbacks, fonctions)</span>
+<span class="keyword">interface</span> <span class="type">HttpClient</span> {
+  get(url: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">unknown</span>&gt;;
+  post(url: <span class="type">string</span>, body: <span class="type">unknown</span>): <span class="type">Promise</span>&lt;<span class="type">unknown</span>&gt;;
+}</code>
+        </div>
+
+        <h3>optional &amp; readonly</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">interface</span> <span class="type">Produit</span> {
+  <span class="keyword">readonly</span> id: <span class="type">number</span>;        <span class="comment">// non modifiable après création</span>
+  nom: <span class="type">string</span>;
+  prix: <span class="type">number</span>;
+  description?: <span class="type">string</span>;  <span class="comment">// optionnel</span>
+}
+
+<span class="keyword">const</span> p: <span class="type">Produit</span> = { id: <span class="number">1</span>, nom: <span class="string">'Laptop'</span>, prix: <span class="number">1200</span> };
+<span class="comment">// p.id = 5;  // ❌ readonly</span>
+p.nom = <span class="string">'Ultrabook'</span>;  <span class="ok">// ✅ OK</ok></code>
+        </div>
+
+        <h3>Header de fonction avec interface</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Signature de fonction typée</span>
+<span class="keyword">interface</span> <span class="type">Formatter</span> {
+  (valeur: <span class="type">number</span>, devises: <span class="type">string</span>): <span class="type">string</span>;
+}
+
+<span class="keyword">const</span> formatterEuro: <span class="type">Formatter</span> = (montant, devise) =&gt;
+  montant.toLocaleString(<span class="string">'fr-FR'</span>, { style: <span class="string">'currency'</span>, currency: devise });
+
+<span class="comment">// index signature + propriétés mixtes</span>
+<span class="keyword">interface</span> <span class="type">Cache</span> {
+  [cle: <span class="type">string</span>]: <span class="type">string</span> | <span class="type">number</span>;
+}
+<span class="keyword">const</span> cache: <span class="type">Cache</span> = { utilisateur: <span class="number">123</span>, session: <span class="string">'abc'</span> };</code>
+        </div>
+    </section>
+
+    <!-- SECTION CLASSES & POO -->
+    <section class="section" data-section="classes">
+        <h2>🏛️ Classes & POO</h2>
+
+        <h3>Classe de base</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">class</span> <span class="type">CompteBancaire</span> {
+  <span class="keyword">private</span> solde: <span class="type">number</span>;          <span class="comment">// inaccessible à l'extérieur</span>
+  <span class="keyword">readonly</span> numero: <span class="type">string</span>;       <span class="comment">// constante après init</span>
+
+  <span class="function">constructor</span>(numero: <span class="type">string</span>, soldeInitial = <span class="number">0</span>) {
+    <span class="keyword">this</span>.numero = numero;
+    <span class="keyword">this</span>.solde = soldeInitial;
+  }
+
+  <span class="function">deposer</span>(montant: <span class="type">number</span>): <span class="type">void</span> {
+    <span class="keyword">if</span> (montant &lt;= <span class="number">0</span>) <span class="keyword">throw new</span> Error(<span class="string">'Montant invalide'</span>);
+    <span class="keyword">this</span>.solde += montant;
+  }
+
+  <span class="function">consulterSolde</span>(): <span class="type">number</span> {
+    <span class="keyword">return</span> <span class="keyword">this</span>.solde;
+  }
+}
+
+<span class="keyword">const</span> compte = <span class="keyword">new</span> CompteBancaire(<span class="string">'A-100'</span>, <span class="number">500</span>);
+compte.deposer(<span class="number">200</span>);
+<span class="comment">// console.log(compte.solde);  // ❌ private</span>
+console.log(compte.consulterSolde());  <span class="comment">// 700</span></code>
+        </div>
+
+        <h3>Modificateurs d'accès</h3>
+        <table>
+            <tr>
+                <th>Modificateur</th>
+                <th>Accessible depuis…</th>
+                <th>Exemple</th>
+            </tr>
+            <tr>
+                <td><code>public</code> (défaut)</td>
+                <td>Partout</td>
+                <td><code>public nom: string</code></td>
+            </tr>
+            <tr>
+                <td><code>private</code></td>
+                <td>La classe uniquement</td>
+                <td><code>private solde: number</code></td>
+            </tr>
+            <tr>
+                <td><code>protected</code></td>
+                <td>La classe + les sous-classes</td>
+                <td><code>protected id: number</code></td>
+            </tr>
+            <tr>
+                <td><code>readonly</code></td>
+                <td>Lecture seule après init</td>
+                <td><code>readonly createdAt: Date</code></td>
+            </tr>
+            <tr>
+                <td><code>static</code></td>
+                <td>Sur la classe, sans instance</td>
+                <td><code>static compteur = 0</code></td>
+            </tr>
+        </table>
+
+        <h3>Héritage, override et abstract</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">abstract class</span> <span class="type">Animal</span> {
+  <span class="keyword">constructor</span>(<span class="keyword">protected</span> nom: <span class="type">string</span>) {}
+
+  <span class="function">deplacer</span>(): <span class="type">string</span> {
+    <span class="keyword">return</span> <span class="string">`${<span class="keyword">this</span>.nom} se déplace`</span>;
+  }
+
+  <span class="keyword">abstract</span> parler(): <span class="type">string</span>;  <span class="comment">// obligatoire dans la sous-classe</span>
+}
+
+<span class="keyword">class</span> <span class="type">Chien</span> <span class="keyword">extends</span> <span class="type">Animal</span> {
+  <span class="keyword">override</span> <span class="function">parler</span>(): <span class="type">string</span> {
+    <span class="keyword">return</span> <span class="string">'Wouf!'</span>;
+  }
+}
+
+<span class="keyword">const</span> rex = <span class="keyword">new</span> Chien(<span class="string">'Rex'</span>);
+console.log(rex.parler());       <span class="comment">// Wouf!</span>
+console.log(rex.deplacer());     <span class="comment">// Rex se déplace</span>
+<span class="comment">// new Animal('x');  // ❌ classe abstraite non instanciable</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 <code>implements</code> :</strong> une classe peut implémenter une interface (contrat)
+            sans hériter de code : <code>class Developpeur implements Personne { ... }</code>.
+            <strong>💡 Parameter properties :</strong>
+            <code>constructor(private solde: number)</code> déclare + initialise en une ligne.
+        </div>
+
+        <h3>Getters et Setters</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">class</span> <span class="type">Temperature</span> {
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> celsius: <span class="type">number</span>) {}
+
+  <span class="keyword">get</span> <span class="function">fahrenheit</span>(): <span class="type">number</span> {
+    <span class="keyword">return</span> (<span class="keyword">this</span>.celsius * <span class="number">9</span>) / <span class="number">5</span> + <span class="number">32</span>;
+  }
+
+  <span class="keyword">set</span> <span class="function">fahrenheit</span>(valeur: <span class="type">number</span>) {
+    <span class="keyword">this</span>.celsius = ((valeur - <span class="number">32</span>) * <span class="number">5</span>) / <span class="number">9</span>;
+  }
+}
+
+<span class="keyword">const</span> t = <span class="keyword">new</span> Temperature(<span class="number">25</span>);
+console.log(t.fahrenheit);  <span class="comment">// 77</span>
+t.fahrenheit = <span class="number">104</span>;       <span class="comment">// setter</span></code>
+        </div>
+
+        <h3>Statiques : classes utilitaires</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">class</span> <span class="type">Outils</span> {
+  <span class="keyword">static</span> instances = <span class="number">0</span>;
+
+  <span class="keyword">static</span> <span class="function">genererId</span>(): <span class="type">number</span> {
+    <span class="keyword">this</span>.instances++;
+    <span class="keyword">return</span> <span class="keyword">this</span>.instances;
+  }
+
+  <span class="keyword">static</span> <span class="function">formatageDate</span>(date: <span class="type">Date</span>): <span class="type">string</span> {
+    <span class="keyword">return</span> date.toISOString().slice(<span class="number">0</span>, <span class="number">10</span>);
+  }
+}
+
+console.log(Outils.genererId());         <span class="comment">// 1 (sans new Outils())</span>
+console.log(Outils.formatageDate(<span class="keyword">new</span> Date()));  <span class="comment">// 2026-XX-XX</span></code>
+        </div>
+    </section>
+
+    <!-- SECTION FONCTIONS TYPÉES -->
+    <section class="section" data-section="fonctions">
+        <h2>🎯 Fonctions Typées</h2>
+
+        <h3>Annotations de paramètres et de retour</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">function</span> <span class="function">additionner</span>(a: <span class="type">number</span>, b: <span class="type">number</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> a + b;
+}
+
+<span class="comment">// Fonction fléchée</span>
+<span class="keyword">const</span> multiplier = (a: <span class="type">number</span>, b: <span class="type">number</span>): <span class="type">number</span> =&gt; a * b;
+
+<span class="comment">// Paramètre optionnel (?)</span>
+<span class="keyword">function</span> <span class="function">saluer</span>(nom: <span class="type">string</span>, titre?: <span class="type">string</span>): <span class="type">string</span> {
+  <span class="keyword">return</span> titre ? <span class="string">`${titre} ${nom}`</span> : nom;
+}
+
+<span class="comment">// Paramètre par défaut</span>
+<span class="keyword">function</span> <span class="function">configurer</span>(porto: <span class="type">number</span> = <span class="number">3000</span>, hote = <span class="string">'localhost'</span>): <span class="type">string</span> {
+  <span class="keyword">return</span> <span class="string">`${hote}:${porto}`</span>;
+}
+
+<span class="comment">// Rest parameters</span>
+<span class="keyword">function</span> <span class="function">somme</span>(...nombres: <span class="type">number</span>[]): <span class="type">number</span> {
+  <span class="keyword">return</span> nombres.reduce((acc, n) =&gt; acc + n, <span class="number">0</span>);
+}</code>
+        </div>
+
+        <h3>Type de retour void et never</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// void : rien à retourner</span>
+<span class="keyword">function</span> <span class="function">afficherErreur</span>(message: <span class="type">string</span>): <span class="type">void</span> {
+  console.error(message);
+}
+
+<span class="comment">// never : ne retourne JAMAIS (throw ou boucle infinie)</span>
+<span class="keyword">function</span> <span class="function">erreurFatal</span>(): <span class="type">never</span> {
+  <span class="keyword">throw new</span> Error(<span class="string">'Erreur irrécupérable'</span>);
+}
+
+<span class="comment">// never utile pour l'exhaustivité d'un switch</span>
+<span class="keyword">function</span> <span class="function">verifierStatut</span>(statut: <span class="type">Statut</span>): <span class="type">string</span> {
+  <span class="keyword">switch</span> (statut) {
+    <span class="keyword">case</span> <span class="string">'actif'</span>: <span class="keyword">return</span> <span class="string">'OK'</span>;
+    <span class="keyword">case</span> <span class="string">'inactif'</span>: <span class="keyword">return</span> <span class="string">'KO'</span>;
+    <span class="keyword">default</span>:
+      <span class="keyword">const</span> jamais: <span class="type">never</span> = statut;  <span class="comment">// erreur si un cas est oublié</span>
+      <span class="keyword">return</span> jamais;
+  }
+}</code>
+        </div>
+
+        <h3>Callbacks et fonctions comme valeurs</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">type</span> <span class="type">Operation</span> = (a: <span class="type">number</span>, b: <span class="type">number</span>) =&gt; <span class="type">number</span>;
+
+<span class="keyword">function</span> <span class="function">executer</span>(a: <span class="type">number</span>, b: <span class="type">number</span>, operation: <span class="type">Operation</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> operation(a, b);
+}
+
+<span class="keyword">const</span> addition: <span class="type">Operation</span> = (x, y) =&gt; x + y;
+executer(<span class="number">5</span>, <span class="number">3</span>, addition);         <span class="comment">// 8</span>
+executer(<span class="number">5</span>, <span class="number">3</span>, (x, y) =&gt; x * y);  <span class="comment">// 15</span>
+
+<span class="comment">// map / filter typés</span>
+<span class="keyword">const</span> nombres: <span class="type">number</span>[] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];
+<span class="keyword">const</span> doublés: <span class="type">number</span>[] = nombres.map(n =&gt; n * <span class="number">2</span>);
+<span class="keyword">const</span> pairs: <span class="type">number</span>[] = nombres.filter(n =&gt; n % <span class="number">2</span> === <span class="number">0</span>);
+<span class="keyword">const</span> total: <span class="type">number</span> = nombres.reduce((acc, n) =&gt; acc + n, <span class="number">0</span>);</code>
+        </div>
+
+        <h3>Function Overloads (surcharge)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Signatures multiples pour meilleure précision</span>
+<span class="keyword">function</span> <span class="function">convertir</span>(valeur: <span class="type">number</span>): <span class="type">string</span>;
+<span class="keyword">function</span> <span class="function">convertir</span>(valeur: <span class="type">string</span>): <span class="type">number</span>;
+<span class="keyword">function</span> <span class="function">convertir</span>(valeur: <span class="type">number</span> | <span class="type">string</span>): <span class="type">number</span> | <span class="type">string</span> {
+  <span class="keyword">if</span> (<span class="keyword">typeof</span> valeur === <span class="string">'number'</span>) {
+    <span class="keyword">return</span> valeur.toString();
+  }
+  <span class="keyword">return</span> Number(valeur);
+}
+
+<span class="keyword">const</span> s: <span class="type">string</span> = convertir(<span class="number">123</span>);   <span class="comment">// TS sait que c'est string</span>
+<span class="keyword">const</span> n: <span class="type">number</span> = convertir(<span class="string">'123'</span>); <span class="comment">// TS sait que c'est number</span></code>
+        </div>
+    </section>
+
+    <!-- SECTION GÉNÉRIQUES -->
+    <section class="section" data-section="generics">
+        <h2>🔄 Génériques</h2>
+
+        <p>
+            Les génériques permettent de créer du code réutilisable <strong>tout en gardant les types précis</strong>,
+            au lieu de retomber dans <code>any</code>.
+        </p>
+
+        <h3>Fonction générique</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// T = paramètre de type générique</span>
+<span class="keyword">function</span> &lt;<span class="type">T</span>&gt;<span class="function">identite</span>(valeur: <span class="type">T</span>): <span class="type">T</span> {
+  <span class="keyword">return</span> valeur;
+}
+
+<span class="keyword">const</span> chaine = identite(<span class="string">'abc'</span>);  <span class="comment">// TS infère : identite<string></span>
+<span class="keyword">const</span> num = identite(<span class="number">42</span>);       <span class="comment">// TS infère : identite<number></span>
+
+<span class="comment">// Fonction générique fléchée (syntaxe TSX séparée)</span>
+<span class="keyword">const</span> premier = &lt;<span class="type">T</span>, <span class="type">TListe</span> extends <span class="type">T</span>[]&gt;(tableau: <span class="type">TListe</span>): <span class="type">T</span> =&gt; tableau[<span class="number">0</span>];</code>
+        </div>
+
+        <h3>Types génériques</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Type générique pour une réponse API</span>
+<span class="keyword">interface</span> <span class="type">ApiResponse</span>&lt;<span class="type">T</span>&gt; {
+  succes: <span class="type">boolean</span>;
+  donnees: <span class="type">T</span> | <span class="keyword">null</span>;
+  message?: <span class="type">string</span>;
+}
+
+<span class="keyword">interface</span> <span class="type">Utilisateur</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+}
+
+<span class="keyword">const</span> reponse: <span class="type">ApiResponse</span>&lt;<span class="type">Utilisateur</span>&gt; = {
+  succes: <span class="keyword">true</span>,
+  donnees: { id: <span class="number">1</span>, nom: <span class="string">'Alice'</span> }
+};
+
+<span class="comment">// Type générique pour une boîte/collection</span>
+<span class="keyword">type</span> <span class="type">Resultat</span>&lt;<span class="type">Reussite</span>, <span class="type">Echec</span>&gt; =
+  | { ok: <span class="keyword">true</span>; valeur: <span class="type">Reussite</span> }
+  | { ok: <span class="keyword">false</span>; erreur: <span class="type">Echec</span> };</code>
+        </div>
+
+        <h3>Contraintes (extends)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// T doit avoir un propriété 'length'</span>
+<span class="keyword">function</span> &lt;<span class="type">T</span> <span class="keyword">extends</span> { length: <span class="type">number</span> }&gt;<span class="function">longueur</span>(valeur: <span class="type">T</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> valeur.length;
+}
+
+longueur(<span class="string">'abc'</span>);           <span class="comment">// 3 (string)</span>
+longueur([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);      <span class="comment">// 3 (array)</span>
+<span class="comment">// longueur(42);          // ❌ number n'a pas de .length</span>
+
+<span class="comment">// Contrainte sur une propriété clé</span>
+<span class="keyword">function</span> &lt;<span class="type">T</span>, <span class="type">K</span> <span class="keyword">extends</span> <span class="keyword">keyof</span> <span class="type">T</span>&gt;<span class="function">obtenirValeur</span>(obj: <span class="type">T</span>, cle: <span class="type">K</span>): <span class="type">T</span>[<span class="type">K</span>] {
+  <span class="keyword">return</span> obj[cle];
+}
+
+obtenirValeur({ nom: <span class="string">'Alice'</span>, age: <span class="number">30</span> }, <span class="string">'nom'</span>);  <span class="comment">// string</span>
+obtenirValeur({ nom: <span class="string">'Alice'</span>, age: <span class="number">30</span> }, <span class="string">'age'</span>);   <span class="comment">// number</span>
+<span class="comment">// obtenirValeur({nom:'Alice'}, 'adresse');  // ❌ n'existe pas</span></code>
+        </div>
+
+        <h3>Classe générique</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">class</span> <span class="type">Pile</span>&lt;<span class="type">T</span>&gt; {
+  <span class="keyword">private</span> elements: <span class="type">T</span>[] = [];
+
+  <span class="function">empiler</span>(element: <span class="type">T</span>): <span class="type">void</span> {
+    <span class="keyword">this</span>.elements.push(element);
+  }
+
+  <span class="function">depiler</span>(): <span class="type">T</span> | <span class="keyword">undefined</span> {
+    <span class="keyword">return</span> <span class="keyword">this</span>.elements.pop();
+  }
+
+  <span class="function">taille</span>(): <span class="type">number</span> {
+    <span class="keyword">return</span> <span class="keyword">this</span>.elements.length;
+  }
+}
+
+<span class="keyword">const</span> pileChaines = <span class="keyword">new</span> Pile&lt;<span class="type">string</span>&gt;();
+pileChaines.empiler(<span class="string">'A'</span>);
+<span class="comment">// pileChaines.empiler(42);  // ❌ number non accepté</span>
+
+<span class="keyword">const</span> pileNombres = <span class="keyword">new</span> Pile&lt;<span class="type">number</span>&gt;();
+pileNombres.empiler(<span class="number">10</span>);</code>
+        </div>
+
+        <h3>Type Parameters &amp; inference avancée</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Le premier argument contrôle les types suivants</span>
+<span class="keyword">function</span> &lt;<span class="type">C</span> <span class="keyword">extends</span> <span class="keyword">string</span>&gt;<span class="function">creerObjet</span>(cle: <span class="type">C</span>, valeur: <span class="type">number</span>):
+  Record&lt;<span class="type">C</span>, <span class="type">number</span>&gt; {
+  <span class="keyword">return</span> { [cle]: valeur } <span class="keyword">as</span> Record&lt;<span class="type">C</span>, <span class="type">number</span>&gt;;
+}
+
+<span class="comment">// const type parameters (TS 5.0+): préserve la précision des literals</span>
+<span class="keyword">function</span> &lt;<span class="keyword">const</span> <span class="type">T</span> <span class="keyword">extends</span> <span class="type">string</span>[]&gt;<span class="function">valeurs</span>(arr: <span class="type">T</span>): <span class="type">T</span> {
+  <span class="keyword">return</span> arr;
+}
+<span class="keyword">const</span> v = valeurs([<span class="string">'a'</span>, <span class="string">'b'</span>]);  <span class="comment">// type : readonly ["a", "b"]</span></code>
+        </div>
+    </section>
+
+    <!-- SECTION UTILITAIRES -->
+    <section class="section" data-section="utilitaires">
+        <h2>🛠️ Utilitaires de Types (Built-in)</h2>
+
+        <p>TypeScript fournit des types utilitaires prêts à l'emploi pour transformer vos types.</p>
+
+        <table>
+            <tr>
+                <th>Utilitaire</th>
+                <th>Effet</th>
+                <th>Exemple</th>
+            </tr>
+            <tr>
+                <td><code>Partial&lt;T&gt;</code></td>
+                <td>Toutes les propriétés optionnelles</td>
+                <td><code>Partial&lt;Utilisateur&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Required&lt;T&gt;</code></td>
+                <td>Toutes les propriétés obligatoires</td>
+                <td><code>Required&lt;Config&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Readonly&lt;T&gt;</code></td>
+                <td>Toutes les propriétés en lecture seule</td>
+                <td><code>Readonly&lt;Tow&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Pick&lt;T, 'a'|'b'&gt;</code></td>
+                <td>Garde seulement certaines clés</td>
+                <td><code>Pick&lt;Utilisateur, 'nom'&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Omit&lt;T, 'a'|'b'&gt;</code></td>
+                <td>Retire certaines clés</td>
+                <td><code>Omit&lt;Utilisateur, 'mdp'&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Record&lt;K, V&gt;</code></td>
+                <td>Dictionnaire typé</td>
+                <td><code>Record&lt;cle, valeur&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Exclude&lt;T, U&gt;</code></td>
+                <td>Ôte des membres d'une union</td>
+                <td><code>Exclude&lt;'a'|'b'|'c', 'a'&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Extract&lt;T, U&gt;</code></td>
+                <td>Garde les membres communs</td>
+                <td><code>Extract&lt;T, U&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>NonNullable&lt;T&gt;</code></td>
+                <td>Retire null et undefined</td>
+                <td><code>NonNullable&lt;string | null&gt;</code></td>
+            </tr>
+            <tr>
+                <td><code>Awaited&lt;T&gt;</code></td>
+                <td>Le type résolu d'une Promise</td>
+                <td><code>Awaited&lt;ReturnType&lt;f&gt;&gt;</code></td>
+            </tr>
+        </table>
+
+        <h3>Exemples concrets</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">interface</span> <span class="type">Utilisateur</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  motDePasse: <span class="type">string</span>;
+}
+
+<span class="comment">// 1. Mise à jour partielle d'un utilisateur</span>
+<span class="keyword">function</span> <span class="function">mettreAJour</span>(utilisateur: <span class="type">Utilisateur</span>, changements: <span class="type">Partial</span>&lt;<span class="type">Utilisateur</span>&gt;): <span class="type">Utilisateur</span> {
+  <span class="keyword">return</span> { ...utilisateur, ...changements };
+}
+
+<span class="comment">// 2. Retirer le mot de passe avant envoi au client</span>
+<span class="keyword">type</span> <span class="type">UtilisateurPublic</span> = <span class="type">Omit</span>&lt;<span class="type">Utilisateur</span>, <span class="string">'motDePasse'</span>&gt;;
+<span class="keyword">const</span> publique: <span class="type">UtilisateurPublic</span> = { id: <span class="number">1</span>, nom: <span class="string">'A'</span>, email: <span class="string">'a@x.com'</span> };
+
+<span class="comment">// 3. Formulaire de création (sans id)</span>
+<span class="keyword">type</span> <span class="type">NouvelUtilisateur</span> = <span class="type">Omit</span>&lt;<span class="type">Utilisateur</span>, <span class="string">'id'</span>&gt;;
+
+<span class="comment">// 4. Dictionnaire typé</span>
+<span class="keyword">type</span> <span class="type">Cotes</span> = Record&lt;<span class="string">'A'</span> | <span class="string">'B'</span> | <span class="string">'C'</span>, <span class="type">number</span>&gt;;
+<span class="keyword">const</span> cotes: <span class="type">Cotes</span> = { A: <span class="number">90</span>, B: <span class="number">80</span>, C: <span class="number">70</span> };</code>
+        </div>
+
+        <h3>Mapped Types (transformation de types)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Créer un type à partir des clés d'un autre</span>
+<span class="keyword">type</span> <span class="type">Drapeaux</span> = { [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">Utilisateur</span>]: <span class="type">boolean</span> };
+<span class="comment">// { id: boolean; nom: boolean; email: boolean; motDePasse: boolean; }</span>
+
+<span class="comment">// Rendre optionnel manuellement (= Partial)</span>
+<span class="keyword">type</span> <span class="type">Optionnel</span>&lt;<span class="type">T</span>&gt; = { [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span>]?: <span class="type">T</span>[<span class="type">K</span>] };
+
+<span class="comment">// Modifier l'accès (readonly / -readonly)</span>
+<span class="keyword">type</span> <span class="type">Mutable</span>&lt;<span class="type">T</span>&gt; = { -<span class="keyword">readonly</span> [<span class="type">K</span> <span class="keyword">in</span> <span class="keyword">keyof</span> <span class="type">T</span>]: <span class="type">T</span>[<span class="type">K</span>] };</code>
+        </div>
+
+        <div class="note">
+            <strong>💡 <code>ReturnType</code> et <code>Parameters</code> :</strong>
+            <code>ReturnType&lt;typeof fn&gt;</code> = le type de retour d'une fonction ;
+            <code>Parameters&lt;typeof fn&gt;</code> = les types de ses paramètres. Très utile pour typer des wrappers.
+        </div>
+    </section>
+
+    <!-- SECTION MODULES -->
+    <section class="section" data-section="modules">
+        <h2>📦 Modules & Écosystème</h2>
+
+        <h3>TypeScript avec ESM (module moderne)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// ---- math.ts ----</span>
+<span class="keyword">export const</span> PI = <span class="number">3.14159</span>;
+<span class="keyword">export function</span> <span class="function">additionner</span>(a: <span class="type">number</span>, b: <span class="type">number</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> a + b;
+}
+<span class="keyword">export default</span> <span class="keyword">function</span> <span class="function">multiplier</span>(a: <span class="type">number</span>, b: <span class="type">number</span>): <span class="type">number</span> {
+  <span class="keyword">return</span> a * b;
+}
+
+<span class="comment">// ---- app.ts ----</span>
+<span class="keyword">import</span> { PI, additionner } <span class="keyword">from</span> <span class="string">'./math.ts'</span>;   <span class="comment">// import nommé</span>
+<span class="keyword">import</span> multiplier <span class="keyword">from</span> <span class="string">'./math.ts'</span>;          <span class="comment">// import par défaut</span>
+<span class="keyword">import</span> * <span class="keyword">as</span> math <span class="keyword">from</span> <span class="string">'./math.ts'</span>;           <span class="comment">// tout</span>
+
+<span class="comment">// Import de types uniquement (verbatimModuleSyntax)</span>
+<span class="keyword">import type</span> { <span class="type">Utilisateur</span> } <span class="keyword">from</span> <span class="string">'./types.ts'</span>;
+
+<span class="comment">// Ré-export / barrel</span>
+<span class="keyword">export</span> { <span class="type">Utilisateur</span>, <span class="function">creerUtilisateur</span> } <span class="keyword">from</span> <span class="string">'./utilisateur.ts'</span>;</code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Extensions .ts dans les imports :</strong> avec ESM (<code>module: NodeNext</code>),
+            écrivez l'extension réelle du fichier. Avec le type stripping de Node 24+, utilisez
+            <code>.ts</code> + <code>rewriteRelativeImportExtensions</code> en option.
+        </div>
+
+        <h3>Déclarations de types (declare)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Variables globales de bibliothèques non typées</span>
+declare var <span class="type">process</span>: {
+  env: Record&lt;<span class="type">string</span>, <span class="type">string</span> | <span class="keyword">undefined</span>&gt;;
+};
+
+<span class="comment">// Types pour des modules sans typage (@types/...)</span>
+declare module <span class="string">'mon-paquet'</span> {
+  <span class="keyword">export function</span> <span class="function">helper</span>(x: <span class="type">number</span>): <span class="type">string</span>;
+}
+
+<span class="comment">// Import depuis un .json (resolveJsonModule)</span>
+<span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'./package.json'</span>;</code>
+        </div>
+
+        <h3>@types et DefinitelyTyped</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Installer les typages de bibliothèques JS pures</span>
+npm install -<span class="template">D</span> @types/node @types/express @types/cors
+npm install -<span class="template">D</span> @types/pg @types/redis
+
+<span class="comment">// Vérifier la présence des types (Types vers doublons)</span>
+<span class="comment">// example : express v5 → pas besoin de @types/express</span>
+
+<span class="comment">// @ts-expect-error : documenter une incompatibilité attendue</span>
+<span class="comment">// @ts-ignore        : ignorer une erreur (⚠️ à éviter)</span></code>
+        </div>
+
+        <h3>Env types (variables d'environnement)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">namespace</span> NodeJS {
+  <span class="keyword">interface</span> <span class="type">ProcessEnv</span> {
+    PORT: <span class="type">string</span>;
+    DATABASE_URL: <span class="type">string</span>;
+    REDIS_URL: <span class="type">string</span>;
+    JWT_SECRET: <span class="type">string</span>;
+  }
+}
+
+<span class="comment">// Usage type-safe</span>
+<span class="keyword">const</span> porto: <span class="type">number</span> = Number(process.env.PORT) || <span class="number">3000</span>;</code>
+        </div>
+    </section>
+
+    <!-- SECTION ASYNCHRONE -->
+    <section class="section" data-section="async">
+        <h2>⏱️ Asynchrone & API</h2>
+
+        <h3>Promise typée</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">interface</span> <span class="type">Utilisateur</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+}
+
+<span class="comment">// Fonction qui retourne une Promise d'Utilisateur</span>
+<span class="keyword">function</span> <span class="function">chargerUtilisateur</span>(id: <span class="type">number</span>): <span class="type">Promise</span>&lt;<span class="type">Utilisateur</span>&gt; {
+  <span class="keyword">return</span> <span class="keyword">new</span> Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      <span class="keyword">if</span> (id &gt; <span class="number">0</span>) {
+        resolve({ id, nom: <span class="string">'Alice'</span>, email: <span class="string">'alice@mail.com'</span> });
+      } <span class="keyword">else</span> {
+        reject(<span class="keyword">new</span> Error(<span class="string">'ID invalide'</span>));
+      }
+    }, <span class="number">500</span>);
+  });
+}
+
+chargerUtilisateur(<span class="number">1</span>)
+  .then(utilisateur =&gt; console.log(utilisateur.nom))  <span class="comment">// Alice</span>
+  .catch(err =&gt; console.error(err));</code>
+        </div>
+
+        <h3>async / await (recommandé)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">async function</span> <span class="function">recupererUtilisateurs</span>(): <span class="type">Promise</span>&lt;<span class="type">Utilisateur</span>[]&gt; {
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> reponse = <span class="keyword">await</span> fetch(<span class="string">'https://api.example.com/utilisateurs'</span>);
+    <span class="keyword">if</span> (!reponse.ok) {
+      <span class="keyword">throw new</span> Error(<span class="string">`Erreur HTTP: ${reponse.status}`</span>);
+    }
+    <span class="keyword">const</span> donnees: <span class="type">Utilisateur</span>[] = <span class="keyword">await</span> reponse.json();
+    <span class="keyword">return</span> donnees;
+  } <span class="keyword">catch</span> (erreur) {
+    console.error(<span class="string">'Échec du chargement :'</span>, erreur);
+    <span class="keyword">return</span> [];   <span class="comment">// valeur de repli</span>
+  }
+}
+
+<span class="comment">// À l'appel</span>
+<span class="keyword">const</span> utilisateurs = <span class="keyword">await</span> recupererUtilisateurs();</code>
+        </div>
+
+        <h3>Fetch API typé (Pattern du type générique)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Wrapper générique : jamais de any en sortie</span>
+<span class="keyword">async function</span> &lt;<span class="type">T</span>&gt;<span class="function">requeteApi</span>(url: <span class="type">string</span>, options?: <span class="type">RequestInit</span>): <span class="type">Promise</span>&lt;<span class="type">T</span>&gt; {
+  <span class="keyword">const</span> reponse = <span class="keyword">await</span> fetch(url, options);
+  <span class="keyword">if</span> (!reponse.ok) {
+    <span class="keyword">throw new</span> Error(<span class="string">`Requête échouée : ${reponse.status}`</span>);
+  }
+  <span class="keyword">return</span> <span class="keyword">await</span> reponse.json() <span class="keyword">as</span> <span class="type">T</span>;
+}
+
+<span class="comment">// Utilisation beaucoup plus simple</span>
+<span class="keyword">const</span> utilisateur = <span class="keyword">await</span> requeteApi&lt;<span class="type">Utilisateur</span>&gt;(<span class="string">'/api/utilisateur/1'</span>);
+console.log(utilisateur.email);  <span class="comment">// type garanti</span>
+
+<span class="comment">// POST avec body</span>
+<span class="keyword">const</span> cree = <span class="keyword">await</span> requeteApi&lt;<span class="type">Utilisateur</span>&gt;(<span class="string">'/api/utilisateur'</span>, {
+  method: <span class="string">'POST'</span>,
+  headers: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+  body: JSON.stringify({ nom: <span class="string">'Bob'</span>, email: <span class="string">'bob@mail.com'</span> }),
+});</code>
+        </div>
+
+        <h3>Gestion structurée des erreurs</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Discriminated union pour des résultats sûrs</span>
+<span class="keyword">type</span> <span class="type">Resultat</span>&lt;<span class="type">T</span>&gt; =
+  | { ok: <span class="keyword">true</span>; valeur: <span class="type">T</span> }
+  | { ok: <span class="keyword">false</span>; erreur: <span class="type">string</span> };
+
+<span class="keyword">async function</span> <span class="function">charger</span>(url: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">Resultat</span>&lt;<span class="type">Utilisateur</span>&gt;&gt; {
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> r = <span class="keyword">await</span> requeteApi&lt;<span class="type">Utilisateur</span>&gt;(url);
+    <span class="keyword">return</span> { ok: <span class="keyword">true</span>, valeur: r };
+  } <span class="keyword">catch</span> (e) {
+    <span class="keyword">return</span> { ok: <span class="keyword">false</span>, erreur: (e <span class="keyword">as</span> Error).message };
+  }
+}
+
+<span class="keyword">const</span> resultat = <span class="keyword">await</span> charger(<span class="string">'/api/utilisateur/1'</span>);
+<span class="keyword">if</span> (resultat.ok) {
+  console.log(<span class="string">`Utilisateur : ${resultat.valeur.nom}`</span>);  <span class="comment">// narrowing</span>
+} <span class="keyword">else</span> {
+  console.warn(resultat.erreur);
+}</code>
+        </div>
+    </section>
+
+    <!-- SECTION DOM & REACT -->
+    <section class="section" data-section="dom-react">
+        <h2>🖥️ DOM & React (TSX)</h2>
+
+        <h3>Manipulation du DOM typée</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Sélection typée : non-null assertion si sûr</span>
+<span class="keyword">const</span> bouton = document.querySelector(<span class="string">'button'</span>)!;
+<span class="keyword">const</span> entree = document.getElementById(<span class="string">'nom'</span>) <span class="keyword">as</span> HTMLInputElement;
+
+<span class="comment">// Vérifier le type d'un event</span>
+bouton.addEventListener(<span class="string">'click'</span>, (event: MouseEvent) =&gt; {
+  console.log(event.clientX, event.clientY);
+});
+
+<span class="comment">// Libère tous les éléments du DOM (@types/dom)</span>
+<span class="keyword">const</span> items = document.querySelectorAll&lt;HTMLLIElement&gt;(<span class="string">'li'</span>);
+items.forEach(li =&gt; console.log(li.textContent));</code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ <code>querySelector</code> retourne <code>Element | null</code> :</strong>
+            gérez le null (<code>if (el) ...</code>) ou utilisez <code>!</code> si vous êtes certain. Ne mettez pas
+            <code>any</code>, préférez <code>HTMLInputElement</code>, <code>HTMLDivElement</code>, etc.
+        </div>
+
+        <h3>React + TypeScript (TSX)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Composant avec props typées</span>
+<span class="keyword">interface</span> <span class="type">UserProps</span> {
+  nom: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+  statut?: <span class="string">'actif'</span> | <span class="string">'inactif'</span>;              <span class="comment">// optionnel + union</span>
+  onSupprimer: (id: <span class="type">number</span>) =&gt; <span class="type">void</span>;            <span class="comment">// callback typé</span>
+}
+
+<span class="keyword">function</span> <span class="type">UserCard</span>({ nom, age, statut = <span class="string">'actif'</span>, onSupprimer }: <span class="type">UserProps</span>) {
+  <span class="keyword">return</span> (
+    &lt;div&gt;
+      &lt;h3&gt;{nom}&lt;/h3&gt;
+      &lt;p&gt;Age : {age} ({statut})&lt;/p&gt;
+      &lt;button onClick={() =&gt; onSupprimer(age)}&gt;
+        Supprimer
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code>
+        </div>
+
+        <h3>useState + events typés</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import type</span> { ChangeEvent, FormEvent } <span class="keyword">from</span> <span class="string">'react'</span>;  <span class="comment">// types génériques</span>
+
+<span class="keyword">function</span> <span class="type">FormTodo</span>() {
+  <span class="keyword">const</span> [texte, setTexte] = useState&lt;<span class="type">string</span>&gt;(<span class="string">''</span>);
+  <span class="keyword">const</span> [todos, setTodos] = useState&lt;<span class="type">Todo</span>[]&gt;([]);
+
+  <span class="keyword">const</span> handleChange = (e: ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    setTexte(e.target.value);
+  };
+
+  <span class="keyword">const</span> handleSubmit = (e: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+    e.preventDefault();
+    setTodos([...todos, { id: Date.now(), texte, fait: <span class="keyword">false</span> }]);
+    setTexte(<span class="string">''</span>);
+  };
+
+  <span class="keyword">return</span> (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input value={texte} onChange={handleChange} /&gt;
+      &lt;button type=<span class="string">"submit"</span>&gt;Ajouter&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code>
+        </div>
+
+        <h3>useReducer pour une logique complexe</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">type</span> <span class="type">Action</span> =
+  | { type: <span class="string">'INCREMENTER'</span> }
+  | { type: <span class="string">'AJOUTER'</span>; valeur: <span class="type">number</span> }
+  | { type: <span class="string">'REINITIALISER'</span> };
+
+<span class="keyword">function</span> <span class="function">reducteur</span>(etat: <span class="type">number</span>, action: <span class="type">Action</span>): <span class="type">number</span> {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'INCREMENTER'</span>: <span class="keyword">return</span> etat + <span class="number">1</span>;
+    <span class="keyword">case</span> <span class="string">'AJOUTER'</span>: <span class="keyword">return</span> etat + action.valeur;
+    <span class="keyword">case</span> <span class="string">'REINITIALISER'</span>: <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">default</span>:
+      <span class="keyword">const</span> jamais: <span class="type">never</span> = action;
+      <span class="keyword">return</span> jamais;
+  }
+}
+
+<span class="keyword">const</span> [compteur, dispatcher] = useReducer(reducteur, <span class="number">0</span>);
+dispatcher({ type: <span class="string">'AJOUTER'</span>, valeur: <span class="number">10</span> });</code>
+        </div>
+
+        <h3>Children typés &amp; Ref</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">import type</span> { ReactNode, Ref } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">interface</span> <span class="type">LayoutProps</span> {
+  children: <span class="type">ReactNode</span>;
+  titre: <span class="type">string</span>;
+}
+
+<span class="keyword">function</span> <span class="type">Layout</span>({ children, titre }: <span class="type">LayoutProps</span>) {
+  <span class="keyword">return</span> (
+    &lt;section&gt;
+      &lt;h1&gt;{titre}&lt;/h1&gt;
+      {children}
+    &lt;/section&gt;
+  );
+}
+
+<span class="comment">// Ref vers un élément</span>
+<span class="keyword">const</span> refEntree = useRef&lt;HTMLInputElement&gt;(<span class="keyword">null</span>);
+refEntree.current?.focus();  <span class="comment">// optional chaining</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Créer un projet React + TS vite :</strong>
+            <code>npm create vite@latest mon-projet -- --template react-ts</code>
+            — génère un projet TSX configuré (Vite recommandé en 2026).
+        </div>
+    </section>
+
+    <!-- SECTION ÉCOSYSTÈME NODE/DB -->
+    <section class="section" data-section="ecosysteme">
+        <h2>🐳 Écosystème Node.js / Base de données</h2>
+
+        <h3>Serveur Express typé</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">import</span> express, { Request, Response } <span class="keyword">from</span> <span class="string">'express'</span>;
+
+<span class="keyword">interface</span> <span class="type">Technologie</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  categorie: <span class="type">string</span>;
+}
+
+<span class="keyword">const</span> technos: <span class="type">Technologie</span>[] = [];
+
+<span class="keyword">const</span> app = express();
+app.use(express.json());
+
+<span class="comment">// Appel API tape JSON typéral</span>
+app.get(<span class="string">'/api/technos'</span>, (<span class="keyword">_req</span>: Request, res: Response) =&gt; {
+  res.json(technos);
+});
+
+app.post(<span class="string">'/api/technos'</span>, (req: Request, res: Response) =&gt; {
+  <span class="comment">// null body guard + typer le corps attendu</span>
+  <span class="keyword">const</span> corps = req.body <span class="keyword">as</span> Omit&lt;<span class="type">Technologie</span>, <span class="string">'id'</span>&gt;;
+  <span class="keyword">if</span> (!corps?.nom || !corps?.categorie) {
+    res.status(<span class="number">400</span>).json({ erreur: <span class="string">'nom et categorie requis'</span> });
+    <span class="keyword">return</span>;
+  }
+  <span class="keyword">const</span> nouvelle: <span class="type">Technologie</span> = { id: technos.length + <span class="number">1</span>, ...corps };
+  technos.push(nouvelle);
+  res.status(<span class="number">201</span>).json(nouvelle);
+});
+
+app.listen(<span class="number">3000</span>, () =&gt; console.log(<span class="string">'Serveur démarré sur :3000'</span>));</code>
+        </div>
+
+        <h3>PostgreSQL avec node-postgres (pg)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">import</span> { Pool } <span class="keyword">from</span> <span class="string">'pg'</span>;
+
+<span class="keyword">interface</span> <span class="type">LigneProduit</span> {
+  id: <span class="type">number</span>;
+  nom: <span class="type">string</span>;
+  prix: <span class="type">number</span>;
+}
+
+<span class="keyword">const</span> pool = <span class="keyword">new</span> Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+<span class="keyword">async function</span> <span class="function">getProduits</span>(): <span class="type">Promise</span>&lt;<span class="type">LigneProduit</span>[]&gt; {
+  <span class="keyword">const</span> { rows } = <span class="keyword">await</span> pool.query&lt;<span class="type">LigneProduit</span>&gt;(
+    <span class="string">'SELECT id, nom, prix FROM produits ORDER BY id'</span>
+  );
+  <span class="keyword">return</span> rows;
+}
+
+<span class="comment">// Paramètres typés (évite l'injection SQL)</span>
+<span class="keyword">async function</span> <span class="function">trouverProduit</span>(id: <span class="type">number</span>): <span class="type">Promise</span>&lt;<span class="type">LigneProduit</span> | <span class="keyword">undefined</span>&gt; {
+  <span class="keyword">const</span> { rows } = <span class="keyword">await</span> pool.query&lt;<span class="type">LigneProduit</span>&gt;(
+    <span class="string">'SELECT id, nom, prix FROM produits WHERE id = $1'</span>, [id]
+  );
+  <span class="keyword">return</span> rows[<span class="number">0</span>];
+}</code>
+        </div>
+
+        <h3>Redis (cache / sessions)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="keyword">import</span> { createClient } <span class="keyword">from</span> <span class="string">'redis'</span>;
+
+<span class="keyword">const</span> client = createClient({ url: process.env.REDIS_URL });
+<span class="keyword">await</span> client.connect();
+
+<span class="keyword">async function</span> <span class="function">mettreEnCache</span>&lt;<span class="type">T</span>&gt;(cle: <span class="type">string</span>, valeur: <span class="type">T</span>, ttlSec: <span class="type">number</span> = <span class="number">60</span>) {
+  <span class="keyword">await</span> client.setEx(cle, ttlSec, JSON.stringify(valeur));
+}
+
+<span class="keyword">async function</span> <span class="function">lireCache</span>&lt;<span class="type">T</span>&gt;(cle: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">T</span> | <span class="keyword">null</span>&gt; {
+  <span class="keyword">const</span> brut = <span class="keyword">await</span> client.get(cle);
+  <span class="keyword">return</span> brut ? (JSON.parse(brut) <span class="keyword">as</span> <span class="type">T</span>) : <span class="keyword">null</span>;
+}
+
+<span class="comment">// Utilisation : cache-first</span>
+<span class="keyword">const</span> cache = <span class="keyword">await</span> lireCache&lt;<span class="type">LigneProduit</span>[]&gt;(<span class="string">'produits'</span>);
+<span class="keyword">if</span> (cache) {
+  <span class="keyword">return</span> cache;
+}
+<span class="keyword">const</span> produits = <span class="keyword">await</span> getProduits();
+<span class="keyword">await</span> mettreEnCache(<span class="string">'produits'</span>, produits, <span class="number">120</span>);</code>
+        </div>
+
+        <h3>Docker + TypeScript (multi-stage build)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment"># Dockerfile (2 étapes : build TS → image d'exécution minimale)</span>
+<span class="keyword">FROM</span> node:22-alpine <span class="keyword">AS</span> build
+WORKDIR <span class="string">/app</span>
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY src ./src
+COPY tsconfig.json ./
+RUN npx tsc <span class="comment"># compile .ts → dist/</span>
+
+<span class="keyword">FROM</span> node:22-alpine
+WORKDIR <span class="string">/app</span>
+COPY --from=build /app/dist ./dist
+COPY package.json ./
+RUN npm ci --omit=dev
+ENV NODE_ENV=production
+EXPOSE <span class="number">3000</span>
+CMD [<span class="string">"node"</span>, <span class="string">"dist/server.js"</span>]</code>
+        </div>
+
+        <h3>docker-compose typique (Postgres + Redis + API)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code>version: <span class="string">'3.8'</span>
+services:
+  api:
+    build: .
+    ports:
+      - <span class="string">"3000:3000"</span>
+    environment:
+      DATABASE_URL: postgres://app:app@db:5432/app
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [<span class="string">"CMD-SHELL"</span>, <span class="string">"pg_isready -U app -d app"</span>]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pgdata:</code>
+        </div>
+
+        <div class="success">
+            <strong>✅ Rappels écosystème pour WebStorm :</strong>
+            <ul>
+                <li>WebStorm + Terminal intégré : npx tsc --watch, node --watch.</li>
+                <li>Variables d'environnement : fichier <code>.env</code> (gitignore !) + <code>dotenv</code>.</li>
+                <li>Cors en développement : <code>npm i cors</code> + <code>app.use(cors())</code>.</li>
+                <li>Types des données API : <code>zod</code> = validation + <code>z.infer</code> pour le typage.</li>
+                <li>Accès DB type-sécurisé : <code>prisma</code> ou <code>drizzle-orm</code>.</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <p>📘 Aide-Mémoire TypeScript — TypeScript 5.9+ / 6.0 / 7.0 (2026)</p>
+        <p>Créé par Mourad Sehboub pour faciliter l'apprentissage de TypeScript</p>
+    </footer>
+</div>
+
+<script>
+    // Gestion de la navigation par catégories
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const sections = document.querySelectorAll('.section');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.dataset.category;
+
+            // Mise à jour des boutons actifs
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Affichage de la section correspondante
+            sections.forEach(section => {
+                if (section.dataset.section === category) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            // Scroll vers le haut
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // Fonction de recherche
+    const searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+
+        if (searchTerm === '') {
+            // Réafficher la section active actuelle
+            return;
+        }
+
+        sections.forEach(section => {
+            const content = section.textContent.toLowerCase();
+
+            if (content.includes(searchTerm)) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+    });
+
+    // Fonction pour copier le code
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling;
+        const code = codeBlock.textContent;
+
+        navigator.clipboard.writeText(code).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✓ Copié!';
+            button.classList.add('copied');
+
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur de copie:', err);
+            button.textContent = '❌ Erreur';
+            setTimeout(() => {
+                button.textContent = 'Copier';
+            }, 2000);
+        });
+    }
+
+    // Restaurer la section active si la recherche est vidée
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            categoryButtons[0].click();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aide-Mémoire Redis Interactif</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #450a0a 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        .tech-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 12px;
+            padding: 10px 18px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        }
+        .tech-nav .nav-logo { color: white; font-weight: 700; font-size: 1.05em; text-decoration: none; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+        .tech-nav .nav-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tech-nav .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 5px 13px; border-radius: 8px; font-size: 0.93em; font-weight: 600; transition: all 0.25s; border: 1px solid transparent; }
+        .tech-nav .nav-links a:hover { background: rgba(255,255,255,0.2); color: white; }
+        .tech-nav .nav-links a.active { background: white; color: #dc2626; }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        header p { font-size: 1.2em; opacity: 0.9; }
+        header .badge { display: inline-block; background: #dc2626; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; margin-top: 10px; font-weight: 600; }
+
+        .search-box { background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .search-box input { width: 100%; padding: 15px; font-size: 16px; border: 2px solid #dc2626; border-radius: 8px; outline: none; transition: all 0.3s; }
+        .search-box input:focus { border-color: #7f1d1d; box-shadow: 0 0 10px rgba(220, 38, 38, 0.3); }
+
+        .nav-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .category-btn { padding: 15px; background: white; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.2); color: #dc2626; }
+        .category-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: #dc2626; color: white; }
+        .category-btn.active { background: #dc2626; color: white; }
+
+        .section { background: white; border-radius: 15px; padding: 30px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; animation: fadeIn 0.5s; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section h2 { color: #dc2626; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #dc2626; font-size: 1.8em; }
+        .section h3 { color: #7f1d1d; margin-top: 25px; margin-bottom: 15px; font-size: 1.4em; }
+
+        .code-block { background: #0d1117; color: #f8f8f2; padding: 20px; border-radius: 8px; margin: 15px 0; overflow-x: auto; position: relative; font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace; box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
+        .code-block code { font-size: 14px; line-height: 1.6; white-space: pre; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: #dc2626; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 12px; transition: all 0.3s; }
+        .copy-btn:hover { background: #7f1d1d; }
+        .copy-btn.copied { background: #28a745; }
+
+        .example { background: #fef2f2; border-left: 4px solid #dc2626; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .example strong { color: #7f1d1d; display: block; margin-bottom: 10px; }
+        .note { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .warning { background: #fffbeb; border-left: 4px solid #d97706; padding: 15px; margin: 15px 0; border-radius: 5px; }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        table th { background: #dc2626; color: white; padding: 13px; text-align: left; }
+        table td { padding: 11px 15px; border-bottom: 1px solid #ddd; }
+        table tr:hover { background: #fef2f2; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+        .card { background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #dc2626; }
+        .card h4 { color: #dc2626; margin-bottom: 10px; }
+
+        footer { text-align: center; color: white; padding: 30px; margin-top: 50px; background: rgba(0,0,0,0.2); border-radius: 15px; }
+
+        .cmd { color: #ff5555; font-weight: bold; }
+        .key { color: #f1fa8c; }
+        .string { color: #a5d6ff; }
+        .number { color: #bd93f9; }
+        .comment { color: #7d8590; font-style: italic; }
+        .fn { color: #ffcb6b; }
+        .kw { color: #ff79c6; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="tech-nav">
+        <a href="../index.html" class="nav-logo">🚀 TechTrends</a>
+        <div class="nav-links">
+            <a href="../JS/index.html">JavaScript</a>
+            <a href="../TS/index.html">TypeScript</a>
+            <a href="../Docker/index.html">Docker</a>
+            <a href="../PostgreSQL/index.html">PostgreSQL</a>
+            <a href="../Redis/index.html" class="active">Redis</a>
+            <a href="../AgentIA/index.html">Agents IA</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🧡 Aide-Mémoire Redis — Collège LaSalle</h1>
+        <p>Cache clé-valeur en mémoire : commandes, types de données, TTL et Node.js</p>
+        <span class="badge">⚡ In-memory data store · cache-first</span>
+    </header>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher une commande Redis ou un concept...">
+    </div>
+
+    <div class="nav-categories">
+        <button class="category-btn active" data-category="demarrage">Démarrage</button>
+        <button class="category-btn" data-category="strings">Strings</button>
+        <button class="category-btn" data-category="types">Autres types</button>
+        <button class="category-btn" data-category="ttl">Expiration (TTL)</button>
+        <button class="category-btn" data-category="cache">Patterns de cache</button>
+        <button class="category-btn" data-category="sessions">Sessions</button>
+        <button class="category-btn" data-category="nodejs">Client Node.js</button>
+        <button class="category-btn" data-category="bonnes">Bonnes pratiques</button>
+    </div>
+
+    <!-- DÉMARRAGE -->
+    <section class="section active" data-section="demarrage">
+        <h2>🚀 Démarrer Redis avec Docker</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code>docker run -d \
+  --name redis \
+  -p 6379:6379 \
+  redis:7-alpine
+
+<span class="comment"># Vérifier avec redis-cli</span>
+docker exec -it redis redis-cli ping
+<span class="comment"># → PONG</span>
+
+<span class="comment"># Entrer dans le shell interactif</span>
+docker exec -it redis redis-cli</code>
+        </div>
+
+        <h3>Concepts clés</h3>
+        <table>
+            <tr><th>Concept</th><th>Explication</th></tr>
+            <tr><td><strong>Key-Value</strong></td><td>Stockage par clé → valeur (pas de tables)</td></tr>
+            <tr><td><strong>En mémoire</strong></td><td>Vitesse ~0.1 ms (vs ~5-50 ms en disque)</td></tr>
+            <tr><td><strong>TTL</strong></td><td>Expiration automatique d'une clé</td></tr>
+            <tr><td><strong>Persistance (optionnelle)</strong></td><td>RDB/AOF — par défaut volatile selon le conteneur</td></tr>
+            <tr><td><strong>Monothread</strong></td><td>Une commande à la fois → atomicité</td></tr>
+        </table>
+
+        <div class="note">
+            <strong>💡 À quoi ça sert ?</strong> Cache de réponses, sessions, files d'attente, compteurs,
+            classements. On garde en Redis ce qui est fréquent mais pas forcément critique (qui peut
+            être rechargé depuis PostgreSQL).
+        </div>
+    </section>
+
+    <!-- STRINGS -->
+    <section class="section" data-section="strings">
+        <h2>📄 Les chaînes (Strings) — le type de base</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">127.0.0.1:6379&gt;</span>
+<span class="cmd">SET</span> <span class="key">user:42</span> <span class="string">"luc"</span>     <span class="comment"># → OK</span>
+<span class="cmd">GET</span> <span class="key">user:42</span>           <span class="comment"># → "luc"</span>
+<span class="cmd">GET</span> <span class="key">inexistant</span>        <span class="comment"># → (nil)</span>
+<span class="cmd">EXISTS</span> <span class="key">user:42</span>        <span class="comment"># → 1 (vrai)</span>
+<span class="cmd">DEL</span> <span class="key">user:42</span>           <span class="comment"># → 1 (nombre de clés supprimées)</span>
+<span class="cmd">SETNX</span> <span class="key">user:42</span> <span class="string">"luc"</span>  <span class="comment"># → 1 seulement si NON existante (SET if Not eXists)</span>
+
+<span class="comment"># Compteurs / incrémentation (atomique !)</span>
+<span class="cmd">INCR</span> <span class="key">compteur:vues</span>    <span class="comment"># → 1, puis 2, 3…</span>
+<span class="cmd">INCRBY</span> <span class="key">stock:10</span> <span class="number">5</span>  <span class="comment"># incrémente de 5</span>
+<span class="cmd">DECR</span> <span class="key">compteur:vues</span>    <span class="comment"># décrémente</span></code>
+        </div>
+
+        <div class="example">
+            <strong>👉 Convention de nommage :</strong> séparateur <code>:</code> et clé structurée —
+            <code>produit:42</code>, <code>session:abc123</code>, <code>cache:produits:rupture</code>
+            comme si vous aviez un mini-système de « tables ».
+        </div>
+    </section>
+
+    <!-- AUTRES TYPES -->
+    <section class="section" data-section="types">
+        <h2>🗂️ Les autres types de données</h2>
+
+        <div class="grid-2">
+            <div class="card">
+                <h4>Hashes (dict)</h4>
+                <p>Un objet : une clé → plusieurs champs/valeurs. Parfait pour une entité (produit, user).</p>
+            </div>
+            <div class="card">
+                <h4>Lists</h4>
+                <p>File ordonnée : messages récents, historique, queue FIFO.</p>
+            </div>
+            <div class="card">
+                <h4>Sets</h4>
+                <p>Collection unique, non ordonnée : tags, abonnés, membres.</p>
+            </div>
+            <div class="card">
+                <h4>Sorted Sets</h4>
+                <p>Collection triée par un score : classements, leaderboards.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">--- HASH : un objet produit ---</span>
+<span class="cmd">HSET</span> <span class="key">produit:10</span> nom <span class="string">"Laptop"</span> prix <span class="number">999</span> stock <span class="number">5</span>
+<span class="cmd">HGET</span> <span class="key">produit:10</span> nom        <span class="comment"># → "Laptop"</span>
+<span class="cmd">HGETALL</span> <span class="key">produit:10</span>         <span class="comment"># tous les champs</span>
+<span class="cmd">HINCRBY</span> <span class="key">produit:10</span> stock -1  <span class="comment"># décrémente le stock de 1</span>
+
+<span class="comment">--- LIST : notifications récentes ---</span>
+<span class="cmd">LPUSH</span> <span class="key">notifs:42</span> <span class="string">"commande livrée"</span>  <span class="comment"># empile à gauche</span>
+<span class="cmd">LRANGE</span> <span class="key">notifs:42</span> <span class="number">0</span> <span class="number">-1</span>     <span class="comment"># tout lister</span>
+<span class="cmd">LLEN</span> <span class="key">notifs:42</span>          <span class="comment"># longueur</span>
+
+<span class="comment">--- SET : tags de tags uniques ---</span>
+<span class="cmd">SADD</span> <span class="key">tags</span> <span class="string">"ia"</span> <span class="string">"web"</span> <span class="string">"docker"</span>
+<span class="cmd">SMEMBERS</span> <span class="key">tags</span>          <span class="comment"># les membres</span>
+<span class="cmd">SISMEMBER</span> <span class="key">tags</span> <span class="string">"ia"</span>  <span class="comment"># → 1</span>
+
+<span class="comment">--- SORTED SET : classement des formations ---</span>
+<span class="cmd">ZADD</span> <span class="key">classement</span> <span class="number">98</span> <span class="string">"luc"</span> <span class="number">87</span> <span class="string">"maya"</span> <span class="number">92</span> <span class="string">"sami"</span>
+<span class="cmd">ZRANGE</span> <span class="key">classement</span> <span class="number">0</span> <span class="number">-1</span> <span class="cmd">REV</span>           <span class="comment"># du plus haut au plus bas</span>
+<span class="cmd">ZSCORE</span> <span class="key">classement</span> <span class="string">"maya"</span>   <span class="comment"># → 87</span></code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Quel type choisir ?</strong>
+            <table>
+                <tr><th>Besoin</th><th>Type</th></tr>
+                <tr><td>Un champ modifiable</td><td>String</td></tr>
+                <tr><td>Une entité (objet)</td><td>Hash</td></tr>
+                <tr><td>Ordre / file / historique</td><td>List</td></tr>
+                <tr><td>Uniques pas ordonnés</td><td>Set</td></tr>
+                <tr><td>Tri par score</td><td>Sorted Set</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- TTL -->
+    <section class="section" data-section="ttl">
+        <h2>⏱️ L'expiration (TTL) — le cœur du cache</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="cmd">SET</span> <span class="key">cache:produits</span> <span class="string">"...json..."</span> <span class="cmd">EX</span> <span class="number">300</span>  <span class="comment"># expire après 300 s</span>
+
+<span class="comment"># Ou avec une commande séparée :</span>
+<span class="cmd">SET</span> <span class="key">cache:produits</span> <span class="string">"...json..."</span>
+<span class="cmd">EXPIRE</span> <span class="key">cache:produits</span> <span class="number">300</span>
+
+<span class="comment"># Vérifier / enlever l'expiration</span>
+<span class="cmd">TTL</span> <span class="key">cache:produits</span>      <span class="comment"># secondes restantes (-1 = jamais, -2 = n'existe pas)</span>
+<span class="cmd">PERSIST</span> <span class="key">cache:produits</span>  <span class="comment"># enlève le TTL</span>
+<span class="cmd">SET</span> <span class="key">cache:produits</span> <span class="string">".."</span> <span class="cmd">KEEPTTL</span>  <span class="comment"># set sans changer le TTL</span></code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Pourquoi un TTL ?</strong> Sans TTL, les clés de cache s'accumulent sans fin et
+            Redis finit par sortir des données selon la politique d'éviction. Un cache avec TTL = données
+            toujours assez fraîches + mémoire maîtrisée.
+        </div>
+    </section>
+
+    <!-- PATTERNS DE CACHE -->
+    <section class="section" data-section="cache">
+        <h2>🧩 Patterns de cache</h2>
+
+        <h3>Cache-Aside (le plus courant : on lit d'abord le cache)</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// GET /api/produits/en-rupture</span>
+async <span class="kw">function</span> <span class="fn">produitsEnRupture</span>() {
+  <span class="kw">const</span> KEY = <span class="string">'cache:produits:en-rupture'</span>;
+
+  <span class="comment">// 1. Lire le cache</span>
+  <span class="kw">const</span> cached = <span class="kw">await</span> redis.get(KEY);
+  <span class="kw">if</span> (cached) {
+    <span class="kw">return</span> <span class="fn">JSON.parse</span>(cached);   <span class="comment">// ✅ cache HIT</span>
+  }
+
+  <span class="comment">// 2. Cache MISS → aller en base</span>
+  <span class="kw">const</span> rows = <span class="kw">await</span> pool.query(
+    <span class="string">`SELECT id, nom, prix FROM produits WHERE stock = 0 ORDER BY nom`</span>
+  );
+
+  <span class="comment">// 3. Remplir le cache avec un TTL</span>
+  <span class="kw">await</span> redis.setEx(KEY, <span class="number">60</span>, <span class="fn">JSON.stringify</span>(rows.rows));
+
+  <span class="kw">return</span> rows.rows;
+}</code>
+        </div>
+
+        <h3>Invalidation : on efface le cache quand on écrit en base</h3>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="kw">async function</span> <span class="fn">supprimerProduit</span>(id) {
+  <span class="kw">await</span> pool.query(<span class="string">'DELETE FROM produits WHERE id = $1'</span>, [id]);
+
+  <span class="comment">// 🔥 Invalidation ciblée : la clé du détail du produit</span>
+  <span class="kw">await</span> redis.del(<span class="string">`cache:produit:${id}`</span>);
+  <span class="comment">// 🔥 + la liste affichée (une invalidation de liste = simple)</span>
+  <span class="kw">await</span> redis.del(<span class="string">'cache:produits:en-rupture'</span>);
+}</code>
+        </div>
+
+        <table>
+            <tr><th>Pattern</th><th>Principe</th><th>Quand ?</th></tr>
+            <tr><td><strong>Cache-Aside</strong></td><td>On lit cache → sinon base → on remplit</td><td>Lectures fréquentes (listes, détails)</td></tr>
+            <tr><td><strong>Write-Through</strong></td><td>On écrit base + cache ensemble</td><td>Données très lues après écriture</td></tr>
+            <tr><td><strong>Stampede / Thundering Herd</strong></td><td>Éviter que 100 clients refassent la même requête DB au MISS</td><td>Clés populaires qui expirent</td></tr>
+        </table>
+
+        <div class="warning">
+            <strong>⚠️ Invalidation = SUJET D'EXAMEN :</strong> un cache « non invalidé » renvoie des
+            données périmées. Règle : à chaque write DB qui impacte une vue, effacez la clé correspondante.
+        </div>
+    </section>
+
+    <!-- SESSIONS -->
+    <section class="section" data-section="sessions">
+        <h2>🔑 Sessions utilisateur</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="comment">// Au login : créer la session</span>
+<span class="kw">const</span> sessionId = <span class="fn">crypto.randomUUID</span>();
+<span class="kw">await</span> redis.setEx(
+  <span class="string">`session:${sessionId}`</span>,          <span class="comment">// clé</span>
+  <span class="number">3600</span>,                              <span class="comment">// 1 heure d'expiration</span>
+  <span class="fn">JSON.stringify</span>({ userId: user.id, role: user.role })
+);
+res.cookie(<span class="string">'session'</span>, sessionId, { httpOnly: <span class="kw">true</span> });
+
+<span class="comment">// À chaque requête protégée :</span>
+<span class="kw">const</span> data = <span class="kw">await</span> redis.get(<span class="string">`session:${sessionId}`</span>);
+<span class="kw">if</span> (!data) <span class="kw">return</span> res.status(<span class="number">401</span>).json({ error: <span class="string">'Session expirée'</span> });
+
+<span class="comment">// Au logout :</span>
+<span class="kw">await</span> redis.del(<span class="string">`session:${sessionId}`</span>);</code>
+        </div>
+
+        <div class="note">
+            <strong>💡 Pourquoi Redis pour les sessions ?</strong> Les sessions HTTP sont volatiles et
+            distribuées : aucun besoin de PostgreSQL (données durables) ; Redis est idéal pour du
+            temporaire rapide + le TTL gère l'expiration automatiquement.
+        </div>
+    </section>
+
+    <!-- CLIENT NODE.JS -->
+    <section class="section" data-section="nodejs">
+        <h2>🔌 Client Node.js (redis npm)</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code>npm install redis</code>
+        </div>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copier</button>
+            <code><span class="kw">import</span> { createClient } <span class="kw">from</span> <span class="string">'redis'</span>;
+<span class="kw">import</span> dotenv <span class="kw">from</span> <span class="string">'dotenv'</span>;
+dotenv.config();
+
+<span class="kw">export const</span> redis = <span class="fn">createClient</span>({ url: process.env.REDIS_URL });
+<span class="kw">await</span> redis.connect();
+redis.on(<span class="string">'error'</span>, err =&gt; console.error(<span class="string">'Redis error:'</span>, err));
+
+<span class="comment">// Méthodes principales (équivalent des commandes)</span>
+<span class="kw">await</span> redis.set(<span class="string">'cle'</span>, <span class="string">'valeur'</span>);
+<span class="kw">await</span> redis.setEx(<span class="string">'cle'</span>, <span class="number">60</span>, <span class="string">'expire dans 60s'</span>);
+<span class="kw">await</span> redis.get(<span class="string">'cle'</span>);            <span class="comment">// → "valeur" | null</span>
+<span class="kw">await</span> redis.del(<span class="string">'cle'</span>);
+<span class="kw">await</span> redis.incr(<span class="string">'compteur'</span>);
+<span class="kw">await</span> redis.ttl(<span class="string">'cle'</span>);            <span class="comment">// → secondes restantes</span>
+<span class="kw">await</span> redis.hGetAll(<span class="string">'produit:10'</span>);
+<span class="kw">await</span> redis.lRange(<span class="string">'notifs:1'</span>, <span class="number">0</span>, -<span class="number">1</span>);
+<span class="kw">await</span> redis.flushDb();              <span class="comment">// 🚨 vide tout (dev only)</span></code>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Rappel Docker :</strong> URL <code>redis://redis:6379</code> dans le réseau Compose,
+            <code>redis://localhost:6379</code> depuis l'hôte. Toujours lire depuis <code>.env</code>.
+        </div>
+    </section>
+
+    <!-- BONNES PRATIQUES -->
+    <section class="section" data-section="bonnes">
+        <h2>✅ Bonnes pratiques Redis</h2>
+        <table>
+            <tr><th>Pratique</th><th>Pourquoi / exemple</th></tr>
+            <tr><td>Toujours un TTL pour le cache</td><td>Évite l'accumulation et le périmé</td></tr>
+            <tr><td>Nommer les clés <code>domaine:id</code></td><td>Lisibilité et organisation</td></tr>
+            <tr><td>Éviter clés géantes</td><td>Un seul <code>GET</code> bloque Redis (monothread)</td></tr>
+            <tr><td>Hashes pour les entités</td><td>Plus compact que 1 clé par champ</td></tr>
+            <tr><td>Invalidation systématique au write</td><td>Cache-Aside cohérent</td></tr>
+            <tr><td>Ne pas y mettre les données critiques</td><td>PostgreSQL reste la source de vérité durable</td></tr>
+            <tr><td><code>KEYS *</code> interdit en prod</td><td>Bloque tout Redis — utiliser SCAN</td></tr>
+        </table>
+
+        <div class="example">
+            <strong>👉 En TP4 :</strong> vous mettrez en cache les réponses GET de votre API REST
+            (produits en rupture, détails produit) et les sessions. Si la BDD tombe, le cache continue de
+            servir les données → c'est la démonstration « performance + résilience ».
+        </div>
+    </section>
+
+    <footer>
+        <p>🧡 Aide-Mémoire Redis — 2026</p>
+        <p>Créé pour le cours 420-TT4-AS · TechTrends — Collège LaSalle</p>
+    </footer>
+</div>
+
+<script>
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const sections = document.querySelectorAll('.section');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.dataset.category;
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            sections.forEach(section => {
+                if (section.dataset.section === category) { section.classList.add('active'); }
+                else { section.classList.remove('active'); }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        if (searchTerm === '') return;
+        sections.forEach(section => {
+            if (section.textContent.toLowerCase().includes(searchTerm)) { section.classList.add('active'); }
+            else { section.classList.remove('active'); }
+        });
+    });
+
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling;
+        const code = codeBlock.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✓ Copié!';
+            button.classList.add('copied');
+            setTimeout(() => { button.textContent = originalText; button.classList.remove('copied'); }, 2000);
+        }).catch(err => {
+            console.error('Erreur de copie:', err);
+            button.textContent = '❌ Erreur';
+            setTimeout(() => { button.textContent = 'Copier'; }, 2000);
+        });
+    }
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            categoryButtons[0].click();
+        }
+    });
+</script>
+</body>
+</html>
